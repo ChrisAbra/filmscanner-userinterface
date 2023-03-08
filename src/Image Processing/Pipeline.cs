@@ -1,7 +1,13 @@
 using Godot;
 using System;
+using ImageMagick;
 
-public partial class Pipeline : GodotObject
+namespace FilmScanner.PixelPipeline
 {
-    
+
+    public partial class Pipeline : GodotObject
+    {
+
+    }
 }
+
