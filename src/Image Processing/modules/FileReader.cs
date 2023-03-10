@@ -27,9 +27,10 @@ public partial class FileReader : IPipelineModule
 
         using (var image = new MagickImage(filePath))
         {
-            var godotImg = new Image();
+            //TODO: Parameterise
             image.Format = MagickFormat.Bmp;
-            GD.Print(image.Depth);
+            image.ColorSpace = ColorSpace.XyY;
+
             output.ByteArray = image.ToByteArray(image.Format);
             output.imageHeight = image.Height;
             output.imageWidth = image.Width;
