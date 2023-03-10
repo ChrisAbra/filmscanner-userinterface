@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhst0kdk0d55u"]
+[gd_scene load_steps=4 format=3 uid="uid://buiefbpwas8h4"]
 
 [ext_resource type="Theme" uid="uid://d4m0hfxqfhyme" path="res://themes/default_theme.tres" id="1_7vdan"]
 [ext_resource type="StyleBox" uid="uid://b3dmcqdtyq6rn" path="res://themes/style_overrides/viewport_background_gray.tres" id="2_24l38"]
-[ext_resource type="Script" path="res://src/Image Processing/Pipeline.cs" id="2_snqyx"]
+[ext_resource type="Script" path="res://src/Image Processing/PixelPipeline.cs" id="3_hfel3"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -46,7 +46,6 @@ use_hidden_tabs_for_min_size = true
 [node name="Pipeline" type="Panel" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel"]
 custom_minimum_size = Vector2(300, 2.08165e-12)
 layout_mode = 2
-script = ExtResource("2_snqyx")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline"]
 layout_mode = 1
@@ -61,26 +60,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Image IO" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
+[node name="PixelPipeline" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Raw Processing" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Color Correction" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Image Shape" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Color Grading" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Effects" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Output" type="Tree" parent="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer"]
-layout_mode = 2
+script = ExtResource("3_hfel3")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="Panel/VBoxContainer/HSplitContainer"]
 layout_direction = 3
@@ -100,22 +83,56 @@ layout_mode = 2
 [node name="CenterPanel" type="Panel" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = ExtResource("2_24l38")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel"]
+[node name="VSplitContainer" type="VSplitContainer" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel"]
+custom_minimum_size = Vector2(2.08165e-12, 50)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/SubViewportContainer"]
-disable_3d = true
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(1316, 1072)
-render_target_clear_mode = 1
-render_target_update_mode = 4
+[node name="Panel" type="Panel" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("2_24l38")
+
+[node name="ImageRenderer" type="TextureRect" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/Panel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 40)
+layout_direction = 2
+layout_mode = 2
+
+[node name="openexr" type="Button" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "openexr.exr"
+
+[node name="sony_positive" type="Button" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "sony_positive.arw"
+
+[node name="kodak_lad" type="Button" parent="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "kodak_lad.cin"
+
+[connection signal="pressed" from="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/HBoxContainer/openexr" to="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer/PixelPipeline" method="_on_openexr_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/HBoxContainer/sony_positive" to="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer/PixelPipeline" method="_on_sony_positive_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/HBoxContainer/kodak_lad" to="Panel/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer/VBoxContainer/PixelPipeline" method="_on_kodak_lad_pressed"]
