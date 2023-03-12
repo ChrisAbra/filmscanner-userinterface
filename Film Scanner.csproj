@@ -5,6 +5,6 @@
     <RootNamespace>FilmScanner</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.3.0"/>
+    <PackageReference Include="Magick.NET-Q16-HDRI-AnyCPU" Version="12.3.0"/>
   </ItemGroup>
 </Project>

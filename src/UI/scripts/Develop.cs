@@ -1,5 +1,7 @@
 using Godot;
+using ImageMagick;
 using System;
+using System.Threading.Tasks;
 
 namespace Scanner.UI
 {
@@ -8,18 +10,11 @@ namespace Scanner.UI
     {
 
         private FileToByteArray fileReader;
-        private ByteToImageMagickFormatter byteToImageMagickFormatter;
-        private ImageMagickToPipelineImageFormatter imageMagickToPipelineFormatter;
-        private GodotImageFormatter godotImageFormatter;
-
         private TextureRect textureRect;
 
         public override void _Ready()
         {
             fileReader = new FileToByteArray();
-            byteToImageMagickFormatter = new ByteToImageMagickFormatter();
-            imageMagickToPipelineFormatter = new ImageMagickToPipelineImageFormatter();
-            godotImageFormatter = new GodotImageFormatter();
             textureRect = GetNode<TextureRect>("%ImageRenderer");
 
 			attachToSignals();
@@ -30,20 +25,25 @@ namespace Scanner.UI
 			GetNode<GlobalSignals>("/root/GlobalSignals").OpenFileNotification += (filePath) => {
 				LoadFile(filePath);
 			};
-
 		}
 
         public async void LoadFile(String filePath)
         {
 
-            var fileByteArray = await fileReader.ReadFileAsync(filePath);
+            var img_magickImage = new MagickImage();
+            await img_magickImage.ReadAsync(filePath);
 
-            var img_magickImage = await byteToImageMagickFormatter.Run(fileByteArray);
+            var img = await img_magickImage.ToPipelineImage();
 
-            var img = await imageMagickToPipelineFormatter.Run(img_magickImage);
+            GD.Print(img.width);
+            GD.Print(img.colorSpace);
+            
+            var img_godot = new Image();
+            img_godot = await img_godot.FromPipelineImage(img,Image.Format.Rgb8);
 
-            var img_godot = await godotImageFormatter.Run(img);
+            GD.Print(img_godot.GetWidth());
 
+            // sRGB color transformation happens here
             textureRect.Texture = ImageTexture.CreateFromImage(img_godot);
 
         }
