@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8b6kc604c13b"]
+
+[ext_resource type="Theme" uid="uid://d4m0hfxqfhyme" path="res://themes/default_theme.tres" id="1_4bivc"]
+[ext_resource type="PackedScene" uid="uid://cb4k1as80lmeu" path="res://scenes/develop.tscn" id="1_4utul"]
+[ext_resource type="Script" path="res://scenes/MainPagesTabs.cs" id="2_jq3px"]
+[ext_resource type="StyleBox" uid="uid://b3dmcqdtyq6rn" path="res://themes/style_overrides/viewport_background_gray.tres" id="2_x0dhd"]
+[ext_resource type="PackedScene" uid="uid://bjc876m7mfp21" path="res://scenes/imagebutton.tscn" id="3_wwuvi"]
+
+[node name="Main" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_4bivc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPagesTabs" type="TabContainer" parent="VBoxContainer" node_paths=PackedStringArray("developElement")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_jq3px")
+developElement = NodePath("Develop")
+
+[node name="Files" type="Panel" parent="VBoxContainer/MainPagesTabs"]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/MainPagesTabs/Files"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FileList" type="Panel" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer"]
+custom_minimum_size = Vector2(300, 2.08165e-12)
+layout_mode = 2
+
+[node name="Thumbnails" type="Panel" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_x0dhd")
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails"]
+layout_mode = 2
+offset_right = 1648.0
+offset_bottom = 1017.0
+columns = 3
+
+[node name="openexr3" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
+layout_mode = 2
+text = "openexr.exr"
+
+[node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/openexr3" index="0"]
+filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_files/openexr.exr"
+
+[node name="kodak_cin" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
+layout_mode = 2
+text = "kodak_cin"
+
+[node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/kodak_cin" index="0"]
+filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_files/kodak_lad.cin"
+
+[node name="Develop" parent="VBoxContainer/MainPagesTabs" instance=ExtResource("1_4utul")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PixelPipeline" parent="VBoxContainer/MainPagesTabs/Develop/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer" index="0"]
+unique_name_in_owner = false
+
+[editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/openexr3"]
+[editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/kodak_cin"]
+[editable path="VBoxContainer/MainPagesTabs/Develop"]

@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://cb4k1as80lmeu"]
+
+[ext_resource type="Theme" uid="uid://d4m0hfxqfhyme" path="res://themes/default_theme.tres" id="1_4evyb"]
+[ext_resource type="StyleBox" uid="uid://b3dmcqdtyq6rn" path="res://themes/style_overrides/viewport_background_gray.tres" id="1_5g2rc"]
+[ext_resource type="Script" path="res://src/UI/scripts/Develop.cs" id="2_ghcrc"]
+
+[node name="Develop" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_4evyb")
+script = ExtResource("2_ghcrc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title Bar" type="MenuBar" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LeftPanel" type="TabContainer" parent="VBoxContainer/HSplitContainer"]
+layout_mode = 2
+use_hidden_tabs_for_min_size = true
+
+[node name="Pipeline" type="Panel" parent="VBoxContainer/HSplitContainer/LeftPanel"]
+custom_minimum_size = Vector2(300, 2.08165e-12)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/LeftPanel/Pipeline"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PixelPipeline" type="Tree" parent="VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/HSplitContainer"]
+layout_direction = 3
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightPanelTabs" type="TabContainer" parent="VBoxContainer/HSplitContainer/HSplitContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
+layout_direction = 2
+layout_mode = 2
+use_hidden_tabs_for_min_size = true
+
+[node name="Inspector" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer/RightPanelTabs"]
+custom_minimum_size = Vector2(300, 2.08165e-12)
+layout_mode = 2
+
+[node name="CenterPanel" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+dragger_visibility = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("1_5g2rc")
+
+[node name="ImageRenderer" type="TextureRect" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/Panel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer"]
+layout_direction = 2
+layout_mode = 2

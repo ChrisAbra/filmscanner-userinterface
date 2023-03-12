@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjc876m7mfp21"]
+
+[ext_resource type="PackedScene" uid="uid://drhvffa83oy45" path="res://scenes/OpenableFile.tscn" id="1_a86i0"]
+
+[node name="Button" type="Button"]
+size_flags_horizontal = 0
+text = "FILENAME"
+
+[node name="OpenableFile" parent="." instance=ExtResource("1_a86i0")]
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="." to="OpenableFile" method="OpenFile"]
