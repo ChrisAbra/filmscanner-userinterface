@@ -1,13 +1,16 @@
 using System;
 using System.Threading;
 
-
-public interface ICancellable
+namespace Scanner.ImagePipeline
 {
-    public CancellationTokenSource cancellationTokenSource {get;}
+    public interface ICancellable
+    {
+        public CancellationTokenSource CancelTokenSource { get; }
 
-    public void Cancel(){
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource?.Dispose();
+        public void Cancel()
+        {
+            CancelTokenSource?.Cancel();
+            CancelTokenSource?.Dispose();
+        }
     }
 }

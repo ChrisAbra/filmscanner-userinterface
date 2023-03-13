@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cb4k1as80lmeu"]
 
 [ext_resource type="Theme" uid="uid://d4m0hfxqfhyme" path="res://themes/default_theme.tres" id="1_4evyb"]
-[ext_resource type="StyleBox" uid="uid://b3dmcqdtyq6rn" path="res://themes/style_overrides/viewport_background_gray.tres" id="1_5g2rc"]
 [ext_resource type="Script" path="res://src/UI/scripts/Develop.cs" id="2_ghcrc"]
+[ext_resource type="PackedScene" uid="uid://c2pkbyd0tynxf" path="res://ImageViewport.tscn" id="3_8hhm4"]
 
 [node name="Develop" type="Panel"]
 anchors_preset = 15
@@ -77,25 +77,9 @@ grow_horizontal = 2
 grow_vertical = 2
 dragger_visibility = 2
 
-[node name="Panel" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = ExtResource("1_5g2rc")
-
-[node name="ImageRenderer" type="TextureRect" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer/Panel"]
+[node name="ImageViewport" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer" instance=ExtResource("3_8hhm4")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-expand_mode = 1
-stretch_mode = 5
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/HSplitContainer/CenterPanel/VSplitContainer"]
 layout_direction = 2

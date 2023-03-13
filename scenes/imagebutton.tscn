@@ -1,12 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjc876m7mfp21"]
+[gd_scene load_steps=2 format=3 uid="uid://2fxnhyeqb00e"]
 
-[ext_resource type="PackedScene" uid="uid://drhvffa83oy45" path="res://scenes/OpenableFile.tscn" id="1_a86i0"]
+[ext_resource type="PackedScene" uid="uid://drhvffa83oy45" path="res://scenes/openable.tscn" id="1_3vedv"]
 
 [node name="Button" type="Button"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 0
 text = "FILENAME"
 
-[node name="OpenableFile" parent="." instance=ExtResource("1_a86i0")]
-metadata/_edit_use_anchors_ = true
+[node name="OpenableFile" parent="." instance=ExtResource("1_3vedv")]
 
 [connection signal="pressed" from="." to="OpenableFile" method="OpenFile"]

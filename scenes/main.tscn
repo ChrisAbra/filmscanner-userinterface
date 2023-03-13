@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://d4m0hfxqfhyme" path="res://themes/default_theme.tres" id="1_4bivc"]
 [ext_resource type="PackedScene" uid="uid://cb4k1as80lmeu" path="res://scenes/develop.tscn" id="1_4utul"]
-[ext_resource type="Script" path="res://scenes/MainPagesTabs.cs" id="2_jq3px"]
+[ext_resource type="Script" path="res://src/UI/scripts/MainPagesTabs.cs" id="2_j6gay"]
 [ext_resource type="StyleBox" uid="uid://b3dmcqdtyq6rn" path="res://themes/style_overrides/viewport_background_gray.tres" id="2_x0dhd"]
-[ext_resource type="PackedScene" uid="uid://bjc876m7mfp21" path="res://scenes/imagebutton.tscn" id="3_wwuvi"]
+[ext_resource type="PackedScene" uid="uid://2fxnhyeqb00e" path="res://scenes/imagebutton.tscn" id="3_wwuvi"]
 
 [node name="Main" type="Panel"]
 anchors_preset = 15
@@ -25,7 +25,7 @@ grow_vertical = 2
 [node name="MainPagesTabs" type="TabContainer" parent="VBoxContainer" node_paths=PackedStringArray("developElement")]
 layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("2_jq3px")
+script = ExtResource("2_j6gay")
 developElement = NodePath("Develop")
 
 [node name="Files" type="Panel" parent="VBoxContainer/MainPagesTabs"]
@@ -48,13 +48,21 @@ layout_mode = 2
 theme_override_styles/panel = ExtResource("2_x0dhd")
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails"]
-layout_mode = 2
-offset_right = 1648.0
-offset_bottom = 1017.0
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
 columns = 3
 
 [node name="openexr3" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "openexr.exr"
 
 [node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/openexr3" index="0"]
@@ -62,10 +70,35 @@ filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_fil
 
 [node name="kodak_cin" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "kodak_cin"
 
 [node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/kodak_cin" index="0"]
 filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_files/kodak_lad.cin"
+
+[node name="pngs" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "png"
+
+[node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/pngs" index="0"]
+filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_files/png8.png"
+
+[node name="pentax_dng" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "pentax_dng"
+
+[node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/pentax_dng" index="0"]
+filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_files/pentax_negative.dng"
+
+[node name="sony_arw" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer" instance=ExtResource("3_wwuvi")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "sony_arw"
+
+[node name="OpenableFile" parent="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/sony_arw" index="0"]
+filePath = "/Users/chris/Documents/Projects/Film Scanner/User Interface/test_files/sony_positive.ARW"
 
 [node name="Develop" parent="VBoxContainer/MainPagesTabs" instance=ExtResource("1_4utul")]
 unique_name_in_owner = true
@@ -73,9 +106,8 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PixelPipeline" parent="VBoxContainer/MainPagesTabs/Develop/VBoxContainer/HSplitContainer/LeftPanel/Pipeline/ScrollContainer" index="0"]
-unique_name_in_owner = false
-
 [editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/openexr3"]
 [editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/kodak_cin"]
-[editable path="VBoxContainer/MainPagesTabs/Develop"]
+[editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/pngs"]
+[editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/pentax_dng"]
+[editable path="VBoxContainer/MainPagesTabs/Files/HSplitContainer/Thumbnails/GridContainer/sony_arw"]
