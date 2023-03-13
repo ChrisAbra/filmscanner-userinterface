@@ -6,9 +6,9 @@ namespace Scanner.ImagePipeline {
     public interface IPipelineModule<InputType,OutputType>
     {
         public string Name {get;}
-        public string Label {get;set;}
-        public string Description {get;set;}
+        public string Label {get;}
+        public string Description {get;}
 
-        public Task<OutputType> Run(InputType input);
+        public Task<OutputType> RunAsync(InputType input, CancellationToken cancellationToken);
     }
 }

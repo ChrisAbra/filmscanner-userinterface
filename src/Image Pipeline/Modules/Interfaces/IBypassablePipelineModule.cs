@@ -6,7 +6,7 @@ namespace Scanner.ImagePipeline
     public interface IBypassablePipelineModule<InputType>
         where InputType : class
     {
-        public Boolean Bypass { get; set; }
+        public bool Bypass { get; set; }
 
         public InputType BypassedOutput(InputType input)
         {

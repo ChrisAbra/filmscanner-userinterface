@@ -4,34 +4,29 @@ using ImageMagick;
 
 namespace Scanner.ImagePipeline.ImageMagickModules
 {
-    public class Orientation : IImageMagickModule
+    public class Paint : IImageMagickModule
     {
         public struct Properties : IModuleProperties
-        {
-            public int ClockwiseRotations;
-        }
+        {}
 
-        public string Name { get => "ImageMagickOrientation"; }
+        public string Name { get => "ImageMagickPaint"; }
         public string Label { get; set; }
         public string Description { get; set; }
         public bool Bypass { get; set; }
         public TimeSpan LastRunTime {get;set;}
         public IModuleProperties InputProperties {get;set;}
 
-        public Orientation()
+        public Paint()
         {
-            this.Label = "ImageMagick Orientation";
-            this.Description = "Uses the ImageMagick Library to perform Orientations";
+            this.Label = "ImageMagick Paint";
+            this.Description = "Uses the ImageMagick Library to perform Paint";
             this.InputProperties = new Properties();
         }
 
         MagickImage IImageMagickModule.Run(MagickImage input)
         {
-            if(InputProperties is Properties props){
-                if(props.ClockwiseRotations > 0){
-                    input.Rotate(props.ClockwiseRotations * 90);
-                }
-            }
+            if(InputProperties is Properties props){}
+            input.OilPaint();
             return input;
         }
     }

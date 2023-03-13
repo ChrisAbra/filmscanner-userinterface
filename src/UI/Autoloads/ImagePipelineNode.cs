@@ -62,10 +62,13 @@ namespace Scanner.UI
             {
                 InputProperties = new ImagePipeline.ImageMagickModules.Orientation.Properties
                 {
-                    ClockwiseRotations = 1
+                    ClockwiseRotations = 2
                 }
             };
             ImageMagickPipelineModules.Add(orientation);
+
+            ImagePipeline.ImageMagickModules.Paint paint = new();
+            ImageMagickPipelineModules.Add(paint);
         }
 
         public async Task LoadFile(String filePath, CancellationToken token)
@@ -116,32 +119,29 @@ namespace Scanner.UI
             imageInfo.Read(activeFilePath);
             MagickImage magickImage = new ();
             await magickImage.ReadAsync(new MemoryStream(activeFileByteArray),imageInfo.Format, token);
-            GD.Print("Magick Image. Image width", magickImage.Width);
 
             //Run through ImageMagick items
             foreach (var module in ImageMagickPipelineModules)
             {
                 if (token.IsCancellationRequested) return PipelineCancellationError();
-                magickImage = await module.Run(magickImage);
+                magickImage = await module.RunAsync(magickImage, token);
+                GD.Print(module.Label + " - Run Time - " + module.LastRunTime);
             }
 
             //Convert to PipelineImage
             if (token.IsCancellationRequested) return PipelineCancellationError();
             var pipelineImage = await magickImage.ToPipelineImage();
-            GD.Print("Pipeline Image. Image width", pipelineImage.Width);
 
             //Run through Compute Shader items
             foreach (var module in ComputeShaderModules)
             {
                 if (token.IsCancellationRequested) return PipelineCancellationError();
-                pipelineImage = await module.Run(pipelineImage);
+                pipelineImage = await module.RunAsync(pipelineImage, token);
             }
 
             //Convert to Godot Image
             if (token.IsCancellationRequested) return PipelineCancellationError();
             this.godotImage = await new Image().FromPipelineImage(pipelineImage);
-
-            GD.Print("Godot Image. Image width", godotImage.GetWidth());
 
             this.UpdateStatus(Status.COMPLETE);
 

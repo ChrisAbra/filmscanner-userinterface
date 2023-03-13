@@ -12,7 +12,7 @@ namespace Scanner.UI
         GlobalSignals GlobalSignals;
         private ImagePipelineNode ImagePipelineNode;
 
-        private CancellationToken PipelineCancellationToken;
+        private CancellationTokenSource PipelineCancellationTokenSource;
 
         public override void _Ready()
         {
@@ -25,10 +25,11 @@ namespace Scanner.UI
 			GlobalSignals.OpenFileNotification += (filePath) => LoadFile(filePath);
 		}
 
-        public async void LoadFile(String filePath)
+        public async void LoadFile(string filePath)
         {
-            PipelineCancellationToken = new CancellationTokenSource().Token;
-            await ImagePipelineNode.LoadFile(filePath, PipelineCancellationToken);
+            PipelineCancellationTokenSource?.Cancel();
+            PipelineCancellationTokenSource = new ();
+            await ImagePipelineNode.LoadFile(filePath, PipelineCancellationTokenSource.Token);
         }
     }
 }
