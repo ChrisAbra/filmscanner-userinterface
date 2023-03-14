@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalSignals="*res://src/UI/Autoloads/GlobalSignals.cs"
-ImagePipelineNode="*res://src/UI/Autoloads/ImagePipelineNode.cs"
 
 [display]
 

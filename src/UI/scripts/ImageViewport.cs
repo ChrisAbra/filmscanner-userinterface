@@ -17,6 +17,7 @@ namespace Scanner.UI {
 
 		public void RenderImage(Image image)
 		{
+			image.Convert(Image.Format.Rgb8);
 			ImageRenderer.Texture = ImageTexture.CreateFromImage(image);
 		}
 	}

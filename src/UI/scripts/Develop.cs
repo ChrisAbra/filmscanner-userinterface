@@ -10,14 +10,14 @@ namespace Scanner.UI
     public partial class Develop : Control
     {
         GlobalSignals GlobalSignals;
-        private ImagePipelineNode ImagePipelineNode;
+
+        private Pipeline activePipeline;
 
         private CancellationTokenSource PipelineCancellationTokenSource;
 
         public override void _Ready()
         {
             GlobalSignals = GetNode<GlobalSignals>("/root/GlobalSignals");
-            ImagePipelineNode = GetNode<ImagePipelineNode>("/root/ImagePipelineNode");
 			AttachToSignals();
         }
 
@@ -29,7 +29,10 @@ namespace Scanner.UI
         {
             PipelineCancellationTokenSource?.Cancel();
             PipelineCancellationTokenSource = new ();
-            await ImagePipelineNode.LoadFile(filePath, PipelineCancellationTokenSource.Token);
+            activePipeline = new Pipeline();
+            Image image = await activePipeline.GetDisplayableImageFromPipeline(filePath, PipelineCancellationTokenSource.Token);
+            GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
+
         }
     }
 }
