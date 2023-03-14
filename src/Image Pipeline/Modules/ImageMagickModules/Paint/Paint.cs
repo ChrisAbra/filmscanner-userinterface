@@ -19,13 +19,12 @@ namespace Scanner.ImagePipeline.ImageMagickModules
         public Paint()
         {
             this.Label = "ImageMagick Paint";
-            this.Description = "Uses the ImageMagick Library to perform Paint";
+            this.Description = "Uses the ImageMagick Library to emulate an oil paint look";
             this.InputProperties = new Properties();
         }
 
-        MagickImage IImageMagickModule.Run(MagickImage input)
+        MagickImage IAsyncTimedPipelineModule<MagickImage>.Run(MagickImage input)
         {
-            if(InputProperties is Properties props){}
             input.OilPaint();
             return input;
         }

@@ -9,6 +9,8 @@ namespace Scanner.ImagePipeline {
         public string Label {get;}
         public string Description {get;}
 
+        public IModuleProperties InputProperties { get; set; }
+
         public Task<OutputType> RunAsync(InputType input, CancellationToken cancellationToken);
     }
 }

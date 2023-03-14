@@ -60,11 +60,12 @@ namespace Scanner.UI
 
             ImagePipeline.ImageMagickModules.Orientation orientation = new()
             {
-                InputProperties = new ImagePipeline.ImageMagickModules.Orientation.Properties
-                {
-                    ClockwiseRotations = 2
-                }
+                InputProperties = new ImagePipeline.ImageMagickModules.Orientation.Properties()
             };
+            if(orientation.InputProperties is ImagePipeline.ImageMagickModules.Orientation.Properties props){
+                props.RotateClockwise();
+                orientation.InputProperties = props;
+            }
             ImageMagickPipelineModules.Add(orientation);
 
             ImagePipeline.ImageMagickModules.Paint paint = new();
@@ -145,7 +146,7 @@ namespace Scanner.UI
 
             this.UpdateStatus(Status.COMPLETE);
 
-            GlobalSignals.EmitImagePipelineImageResult(godotImage);
+            GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, godotImage);
 
             return null;
         }
@@ -153,7 +154,7 @@ namespace Scanner.UI
         private void UpdateStatus(Status status)
         {
             this.status = status;
-            GlobalSignals.EmitImagePipelineUpdateStatus(status);
+            GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineStatusUpdate, (int)status);
         }
 
         private static PipelineError PipelineCancellationError()

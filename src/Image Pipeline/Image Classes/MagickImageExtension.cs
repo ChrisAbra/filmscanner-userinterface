@@ -10,7 +10,7 @@ namespace Scanner.ImagePipeline
         public static async Task<PipelineImage> ToPipelineImage(this MagickImage magickImage, ColorSpace colorSpace = ColorSpace.RGB)
         {
             var img = new PipelineImage();
-            await Task.Run((Action)(() =>
+            await Task.Run(() =>
             {
                 if (magickImage.Format != MagickFormat.Exr)
                 {
@@ -22,7 +22,7 @@ namespace Scanner.ImagePipeline
                 img.Width = magickImage.Width;
                 img.Height = magickImage.Height;
                 img.ColorSpace = magickImage.TranslateColorSpaceEnumToPipeline(colorSpace);
-            }));
+            });
             return img;
         }
 

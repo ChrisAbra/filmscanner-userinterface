@@ -44,7 +44,6 @@ namespace Scanner.ImagePipeline
     public class PipelineImage
     {
         public byte[] PixelByteArray;
-
         public int Width;
         public int Height;
         public ColorSpace ColorSpace;

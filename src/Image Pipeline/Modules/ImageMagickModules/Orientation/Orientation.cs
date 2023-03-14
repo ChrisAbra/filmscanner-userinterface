@@ -9,6 +9,20 @@ namespace Scanner.ImagePipeline.ImageMagickModules
         public struct Properties : IModuleProperties
         {
             public int ClockwiseRotations;
+            public void RotateClockwise(){
+                if(ClockwiseRotations > 3){
+                    ClockwiseRotations = 0;
+                } else{
+                    ClockwiseRotations++;
+                }
+            }
+            public void RotateAntiClockwise(){
+                if(ClockwiseRotations == 0){
+                    ClockwiseRotations = 3;
+                } else{
+                    ClockwiseRotations--;
+                }
+            }
         }
 
         public string Name { get => "ImageMagickOrientation"; }
@@ -21,15 +35,16 @@ namespace Scanner.ImagePipeline.ImageMagickModules
         public Orientation()
         {
             this.Label = "ImageMagick Orientation";
-            this.Description = "Uses the ImageMagick Library to perform Orientations";
+            this.Description = "Uses the ImageMagick Library to perform orthagonal orientations";
             this.InputProperties = new Properties();
         }
 
-        MagickImage IImageMagickModule.Run(MagickImage input)
+        MagickImage IAsyncTimedPipelineModule<MagickImage>.Run(MagickImage input)
         {
             if(InputProperties is Properties props){
-                if(props.ClockwiseRotations > 0){
-                    input.Rotate(props.ClockwiseRotations * 90);
+                if(props.ClockwiseRotations != 0){
+                    int numberRotations = props.ClockwiseRotations % 4;
+                    input.Rotate(numberRotations * 90);
                 }
             }
             return input;

@@ -11,7 +11,7 @@ namespace Scanner.UI
         public void OpenFile()
         {
             GD.Print(filePath);
-            GlobalSignals?.EmitOpenFileNotification(filePath);
+            GlobalSignals.EmitSignal(GlobalSignals.SignalName.OpenFileNotification, filePath);
         }
     }
 }
