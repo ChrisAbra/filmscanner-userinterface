@@ -12,28 +12,28 @@ namespace Scanner.UI
     {
         GlobalSignals GlobalSignals;
 
-        private Dictionary<String,Pipeline> FilePipelines;
+        private Dictionary<String, PixelPipeline> FilePipelines;
 
-        private CancellationTokenSource PipelineCancellationTokenSource;
+        //private CancellationTokenSource PipelineCancellationTokenSource;
 
         public override void _Ready()
         {
             GlobalSignals = GetNode<GlobalSignals>("/root/GlobalSignals");
             FilePipelines = new ();
-			AttachToSignals();
+            AttachToSignals();
         }
 
-		private void AttachToSignals(){
-			GlobalSignals.OpenFileNotification += (filePath) => LoadFile(filePath);
-		}
+        private void AttachToSignals()
+        {
+            GlobalSignals.OpenFileNotification += (filePath) => LoadFile(filePath);
+        }
 
         public async void LoadFile(string filePath)
         {
-            PipelineCancellationTokenSource?.Cancel();
-            PipelineCancellationTokenSource = new ();
-            Pipeline activePipeline = FilePipelines.GetValueOrDefault(filePath) ?? new Pipeline();
-            Image image = await activePipeline?.GetDisplayableImageFromPipeline(filePath, PipelineCancellationTokenSource.Token);
-            FilePipelines.TryAdd(filePath,activePipeline);
+            PixelPipeline activePipeline = FilePipelines.GetValueOrDefault(filePath) ?? new PixelPipeline(filePath);
+            FilePipelines.TryAdd(filePath, activePipeline);
+            Image image = await activePipeline.RunPipeline();
+
             GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
         }
     }
