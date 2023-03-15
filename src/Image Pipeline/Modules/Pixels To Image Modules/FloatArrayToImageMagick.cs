@@ -5,13 +5,12 @@ using ImageMagick;
 
 namespace Scanner.ImagePipeline
 {
-
-    public struct FloatArrayToImageMagick_Properties : IModuleProperties {
+    public class FloatArrayToImageMagick_Properties : IModuleProperties
+    {
         public int Width;
         public int Height;
         public int Channels;
-        
-     }
+    }
 
     public class FloatArrayToImageMagick : IModule<float[], MagickImage, FloatArrayToImageMagick_Properties>
     {
@@ -34,14 +33,16 @@ namespace Scanner.ImagePipeline
 
         async Task<MagickImage> IModule<float[], MagickImage, FloatArrayToImageMagick_Properties>.Run(float[] floatArray, CancellationToken token)
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 var pixelMapping = PixelMapping.RGB;
-                if(Properties.Channels == 4){
+                if (Properties.Channels == 4)
+                {
                     pixelMapping = PixelMapping.RGBA;
                 }
                 var settings = new PixelReadSettings(Properties.Width, Properties.Height, StorageType.Quantum, pixelMapping);
                 var image = new MagickImage();
-                image.ReadPixels(floatArray,settings);
+                image.ReadPixels(floatArray, settings);
                 return image;
             }, token);
         }

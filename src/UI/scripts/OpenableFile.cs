@@ -10,7 +10,6 @@ namespace Scanner.UI
 
         public void OpenFile()
         {
-            GD.Print(filePath);
             GlobalSignals.EmitSignal(GlobalSignals.SignalName.OpenFileNotification, filePath);
         }
     }

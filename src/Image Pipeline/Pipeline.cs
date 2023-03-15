@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Scanner.ImagePipeline {
-    public class Pipeline {
+namespace Scanner.ImagePipeline
+{
+    public class Pipeline
+    {
         public PipelineStatus Status;
 
         public int ImageWidth;
@@ -16,93 +18,110 @@ namespace Scanner.ImagePipeline {
 
         public bool FileLoaded;
 
-        private CancellationTokenSource tokenSource;
+        public Image CompletedImage;
 
-        public IModule<string,MagickImage, FileToImageMagick_Properties> FileReaderToImageModule;
-        public IModule<MagickImage,float[], ImageMagickToFloatArray_Properties> ImageToFloatModule;
-        public List<IModule<float[],float[], IModuleProperties>> PixelToPixelModules;
-        public IModule<float[],MagickImage, FloatArrayToImageMagick_Properties> PixelsToImageModule;
-        public IModule<MagickImage,Image, ImageMagickToGodotImage_Properties> ImageToGodotImage;
+        public IModule<string, MagickImage, FileToImageMagick_Properties> FileReaderToImageModule;
+        public List<IModule<MagickImage, MagickImage, IModuleProperties>> MagickImageModules;
 
-        public Pipeline(){
-            FileReaderToImageModule =  (IModule<string,MagickImage, FileToImageMagick_Properties>)new FileToImageMagick();
-            ImageToFloatModule =  new ImageMagickToFloatArray();
-            PixelsToImageModule =  new FloatArrayToImageMagick();
-            ImageToGodotImage =  new ImageMagickToGodotImage();
+        public IModule<MagickImage, float[], ImageMagickToFloatArray_Properties> ImageToFloatModule;
+        public List<IModule<float[], float[], IModuleProperties>> PixelToPixelModules;
+        public IModule<float[], MagickImage, FloatArrayToImageMagick_Properties> PixelsToImageModule;
+        public IModule<MagickImage, Image, ImageMagickToGodotImage_Properties> ImageToGodotImage;
 
-            PixelToPixelModules = new List<IModule<float[],float[], IModuleProperties>>();
+        public Pipeline()
+        {
+            // Sets up the default inbound and display bound transformations
+            FileReaderToImageModule = new FileToImageMagick();
+            ImageToFloatModule = new ImageMagickToFloatArray();
+            PixelsToImageModule = new FloatArrayToImageMagick();
+            ImageToGodotImage = new ImageMagickToGodotImage();
+
+            // Initiialises the list of pixel operations
+            PixelToPixelModules = new List<IModule<float[], float[], IModuleProperties>>();
+            MagickImageModules = new List<IModule<MagickImage, MagickImage, IModuleProperties>>();
         }
-        public async Task<Image> GetDisplayableImageFromPipeline(string filePath, CancellationToken cancellationToken){
-            await ReadFile(filePath);
-            return await GetDisplayableImageFromPipeline(cancellationToken);
-        }
 
-        public async Task<Image> GetDisplayableImageFromPipeline(CancellationToken cancellationToken){
-            if(!FileLoaded && ImageFilePath != null){
-                await ReadFile(cancellationToken);
+        public void RegisterModules(IModuleProperties properties){
+            
+        }
+        public async Task<Image> GetDisplayableImageFromPipeline(string filePath, CancellationToken cancellationToken)
+        {
+            GD.Print("===================================");
+            GD.Print(filePath);
+            GD.Print(this.ImageFilePath);
+            GD.Print(this.Status);
+            if (filePath == this.ImageFilePath && this.Status == PipelineStatus.COMPLETE)
+            {
+                GD.Print("Already rendered image");
+                return CompletedImage;
             }
+            await ReadFile(filePath, cancellationToken);
+            UpdateStatus(PipelineStatus.WORKING);
 
-            updateStatus(PipelineStatus.WORKING);
-            foreach(var module in PixelToPixelModules){
-                if(module.Status != ModuleStatus.DISABLED){
-                    await module.RunTimed(Pixels,cancellationToken);
+            foreach (var module in PixelToPixelModules)
+            {
+                if (module.Status != ModuleStatus.DISABLED)
+                {
+                    Pixels = await module.RunTimed(Pixels, cancellationToken);
                 }
             }
-            MagickImage magickImage = await PixelsToImageModule.RunTimed(Pixels,cancellationToken);
-            Image image = await ImageToGodotImage.RunTimed(magickImage,cancellationToken);
-            updateStatus(PipelineStatus.COMPLETE);
-            return image;
-        }
-        public async Task<Image> GetDisplayableImageFromPipeline(){
-            tokenSource?.Cancel();
-            tokenSource = new CancellationTokenSource();
-            return await GetDisplayableImageFromPipeline(tokenSource.Token);
+
+            MagickImage magickImage = await PixelsToImageModule.RunTimed(Pixels, cancellationToken);
+
+            foreach (var module in MagickImageModules)
+            {
+                if (module.Status != ModuleStatus.DISABLED)
+                {
+                    magickImage = await module.RunTimed(magickImage, cancellationToken);
+                }
+            }
+
+            CompletedImage = await ImageToGodotImage.RunTimed(magickImage, cancellationToken);
+            UpdateStatus(PipelineStatus.COMPLETE);
+            return CompletedImage;
         }
 
-        public async Task ReadFile(string filePath){
+        public async Task ReadFile(string filePath, CancellationToken cancellationToken)
+        {
+            this.FileLoaded = false;
+            this.ImageFilePath = filePath;
+            UpdateStatus(PipelineStatus.LOADING);
+            MagickImage image = await FileReaderToImageModule.RunTimed(this.ImageFilePath, cancellationToken);
+
+            this.ImageWidth = image.Width;
+            this.ImageHeight = image.Height;
+            this.ImageChannels = image.GetPixels().Channels;
+
+            this.Pixels = await ImageToFloatModule.RunTimed(image, cancellationToken);
+            this.FileLoaded = true;
+
+            this.PixelsToImageModule.Properties = new FloatArrayToImageMagick_Properties
+            {
+                Width = this.ImageWidth,
+                Height = this.ImageHeight,
+                Channels = this.ImageChannels
+            };
+
+            this.ImageToGodotImage.Properties = new ImageMagickToGodotImage_Properties
+            {
+                Width = this.ImageWidth,
+                Height = this.ImageHeight,
+                Channels = this.ImageChannels
+            };
+
+            UpdateStatus(PipelineStatus.LOADING_FINISHED);
+
+        }
+
+        public void UnloadImage(){
+            CompletedImage = null;
             FileLoaded = false;
-            ImageFilePath = filePath;
-            GD.Print(filePath);
-
-            await ReadFile();
         }
 
-        private async Task ReadFile(){
-            tokenSource = new CancellationTokenSource();
-            await ReadFile(tokenSource.Token);
-            tokenSource.Dispose();
-        }
-
-        private async Task ReadFile(CancellationToken token){
-            updateStatus(PipelineStatus.LOADING);
-            MagickImage image = await FileReaderToImageModule.RunTimed(ImageFilePath,token);
-
-            ImageWidth = image.Width;
-            ImageHeight = image.Height;
-            ImageChannels = image.GetPixels().Channels;
-            GD.Print(ImageChannels);
-
-            Pixels = await ImageToFloatModule.RunTimed(image,token);
-            FileLoaded = true;
-
-            PixelsToImageModule.Properties = new FloatArrayToImageMagick_Properties{
-                Width = ImageWidth,
-                Height = ImageHeight,
-                Channels = ImageChannels
-            };
-            
-            ImageToGodotImage.Properties = new ImageMagickToGodotImage_Properties{
-                Width = ImageWidth,
-                Height = ImageHeight,
-                Channels = ImageChannels
-            };
-
-            updateStatus(PipelineStatus.LOADING_FINISHED);
-        }
-
-        private void updateStatus(PipelineStatus newStatus){
+        private void UpdateStatus(PipelineStatus newStatus)
+        {
+            this.Status = newStatus;
             GD.Print(newStatus);
-            Status = newStatus;
         }
     }
 }

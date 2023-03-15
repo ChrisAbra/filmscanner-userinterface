@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Scanner.ImagePipeline;
+using System.Collections.Generic;
 
 namespace Scanner.UI
 {
@@ -11,13 +12,14 @@ namespace Scanner.UI
     {
         GlobalSignals GlobalSignals;
 
-        private Pipeline activePipeline;
+        private Dictionary<String,Pipeline> FilePipelines;
 
         private CancellationTokenSource PipelineCancellationTokenSource;
 
         public override void _Ready()
         {
             GlobalSignals = GetNode<GlobalSignals>("/root/GlobalSignals");
+            FilePipelines = new ();
 			AttachToSignals();
         }
 
@@ -29,10 +31,10 @@ namespace Scanner.UI
         {
             PipelineCancellationTokenSource?.Cancel();
             PipelineCancellationTokenSource = new ();
-            activePipeline = new Pipeline();
-            Image image = await activePipeline.GetDisplayableImageFromPipeline(filePath, PipelineCancellationTokenSource.Token);
+            Pipeline activePipeline = FilePipelines.GetValueOrDefault(filePath) ?? new Pipeline();
+            Image image = await activePipeline?.GetDisplayableImageFromPipeline(filePath, PipelineCancellationTokenSource.Token);
+            FilePipelines.TryAdd(filePath,activePipeline);
             GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
-
         }
     }
 }

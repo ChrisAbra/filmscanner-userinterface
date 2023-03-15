@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scanner.ImagePipeline {
-
     public interface IModule <InputType,OutputType, PropertiesType>
         where PropertiesType : IModuleProperties
     {

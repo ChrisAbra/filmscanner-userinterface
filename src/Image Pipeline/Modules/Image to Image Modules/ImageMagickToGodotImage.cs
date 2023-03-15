@@ -6,7 +6,7 @@ using Godot;
 
 namespace Scanner.ImagePipeline
 {
-    public struct ImageMagickToGodotImage_Properties : IModuleProperties
+    public class ImageMagickToGodotImage_Properties : IModuleProperties
     {
         public int Width;
         public int Height;
@@ -38,7 +38,6 @@ namespace Scanner.ImagePipeline
             {
                 var pixelMapping = PixelMapping.RGB;
                 Image.Format format = Image.Format.Rgb8;
-                GD.Print(Properties.Channels);
                 if (Properties.Channels == 4)
                 {
                     pixelMapping = PixelMapping.RGBA;

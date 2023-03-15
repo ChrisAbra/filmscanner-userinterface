@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using ImageMagick;
 
 namespace Scanner.ImagePipeline {
-
-    public struct ImageMagickToFloatArray_Properties : IModuleProperties {}
+    public class ImageMagickToFloatArray_Properties : IModuleProperties {}
 
     public class ImageMagickToFloatArray : IModule<MagickImage, float[], ImageMagickToFloatArray_Properties>
     {
