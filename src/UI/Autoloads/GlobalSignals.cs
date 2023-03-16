@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Scanner.ImagePipeline;
 
 namespace Scanner.UI
 {
@@ -14,5 +15,8 @@ namespace Scanner.UI
         public delegate void ImagePipelineStatusUpdateEventHandler(int status);
         [Signal]
         public delegate void ImagePipelineCompletedImageEventHandler(Image image);
+
+        [Signal]
+        public delegate void ImagePipelineUpdatedPropertyEventHandler(string moduleName, ModuleProperties properties);
     }
 }

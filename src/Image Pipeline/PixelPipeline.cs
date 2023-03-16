@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 using Godot;
 using ImageMagick;
 
@@ -81,72 +82,108 @@ namespace Scanner.ImagePipeline
             SetupDefaultPipelineModules();
         }
 
+        private ImageModule GetModuleByName(string moduleName)
+        {
+            foreach (var module in ImageProcessingModules)
+            {
+                if (module.Name == moduleName)
+                {
+                    return module;
+                }
+            }
+            return null;
+        }
+
+        public void UpdateModuleProperties(string moduleName, ModuleProperties properties)
+        {
+            var module = GetModuleByName(moduleName);
+            module.ModuleProperties = properties;
+            module.Status = ModuleStatus.DIRTY;
+        }
+
+        public void ToggleModuleProperties(string moduleName)
+        {
+            var module = GetModuleByName(moduleName);
+            module.IsDisabled = !module.IsDisabled;
+        }
+
         public void SetupDefaultPipelineModules()
         {
             ImageProcessingModules = new()
             {
-                new Exposure("Exposure")
+                new Exposure("Exposure",new Exposure.ExposureProperties{
+                    EV = 1f
+                })
             };
         }
 
-        public async Task<Image> RunPipeline()
+        public async Task<Image> RunPipeline(CancellationToken cancellationToken)
         {
-            return await RunPipeline(0, false, 0);
+            return await RunPipeline(0, false, 0, cancellationToken);
         }
 
-        public async Task<Image> RunPipeline(int pipelineStartIndex, bool cache, int pipelineCacheIndex)
+        public async Task<Image> RunPipeline(int pipelineStartIndex, bool cache, int pipelineCacheIndex, CancellationToken cancellationToken)
         {
-            State = PixelPipelineState.ACTIVE;
-            if (UnprocessedImage == null)
+            try
             {
-                DateTime loadTimeStart = DateTime.Now;
-                await LoadFile();
-                GD.Print("LoadTime : " + (DateTime.Now - loadTimeStart));
-            }
-
-            //if no modules have been modified since last run then return cached image;
-            bool hasDirtyModules = false;
-            foreach (var module in ImageProcessingModules)
-            {
-                if (module.Status == ModuleStatus.DIRTY)
+                State = PixelPipelineState.ACTIVE;
+                if (UnprocessedImage == null)
                 {
-                    hasDirtyModules = true;
-                    break;
+                    DateTime loadTimeStart = DateTime.Now;
+                    await LoadFile();
+                    GD.Print("LoadTime : " + (DateTime.Now - loadTimeStart));
                 }
-            }
 
-            if (!hasDirtyModules && CompletedImage != null)
-            {
-                GD.Print("Return cached image");
+                //if no modules have been modified since last run then return cached image;
+                bool hasDirtyModules = false;
+                foreach (var module in ImageProcessingModules)
+                {
+                    if (module.Status == ModuleStatus.DIRTY)
+                    {
+                        hasDirtyModules = true;
+                        break;
+                    }
+                }
+
+                if (!hasDirtyModules && CompletedImage != null)
+                {
+                    GD.Print("Return cached image");
+                    return CompletedImage;
+                }
+
+                Image image = new();
+                image.CopyFrom(UnprocessedImage);
+                //Runs the pipeline from the start index 
+                for (int i = pipelineStartIndex; i < ImageProcessingModules.Count; i++)
+                {
+                    var module = ImageProcessingModules[i];
+                    if (module.IsDisabled)
+                    {
+                        continue;
+                    }
+                    if (i == pipelineStartIndex && module.CachedImage != null)
+                    {
+                        image = module.CachedImage;
+                        continue;
+                    }
+                    bool cacheModule = cache && i == pipelineCacheIndex;
+                    image = module.CachedImage ?? await Task.Run(() => module.Run(ref image, cacheModule), cancellationToken);
+                    GD.Print(module.Label + " : " + module.LastRunTime);
+                }
+
+                DateTime to24bitStartTime = DateTime.Now;
+                await Task.Run(() => RGBFImageToRGB8(ref image), cancellationToken);
+                CompletedImage = image;
+                GD.Print("ConvertTo24bit image : " + (DateTime.Now - to24bitStartTime));
+
                 return CompletedImage;
             }
-
-            Image image = new();
-            image.CopyFrom(UnprocessedImage);
-            //Runs the pipeline from the start index 
-            for (int i = pipelineStartIndex; i < ImageProcessingModules.Count; i++)
+            catch (TaskCanceledException cancelledException)
             {
-                var module = ImageProcessingModules[i];
-                if (module.IsDisabled)
-                {
-                    continue;
-                }
-                if (i == pipelineStartIndex && module.CachedImage != null)
-                {
-                    image = module.CachedImage;
-                    continue;
-                }
-                bool cacheModule = cache && i == pipelineCacheIndex;
-                image = module.CachedImage ?? await Task.Run(() => module.Run(ref image, cacheModule));
-                GD.Print(module.Label + " : " + module.LastRunTime);
+                GD.Print("Pipeline processing cancelled");
+                return null;
             }
 
-            DateTime to24bitStartTime = DateTime.Now;
-            await Task.Run(() => RGBFImageToRGB8(ref image));
-            CompletedImage = image;
-            GD.Print("ConvertTo24bit image : " + (DateTime.Now - to24bitStartTime));
-
-            return CompletedImage;
         }
 
         private void RGBFImageToRGB8(ref Image image)

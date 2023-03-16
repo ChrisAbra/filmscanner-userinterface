@@ -1,10 +1,8 @@
 using Godot;
-using ImageMagick;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Scanner.ImagePipeline;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Scanner.UI
 {
@@ -12,29 +10,50 @@ namespace Scanner.UI
     {
         GlobalSignals GlobalSignals;
 
-        private Dictionary<String, PixelPipeline> FilePipelines;
+        private Dictionary<string, PixelPipeline> FilePipelines;
 
-        //private CancellationTokenSource PipelineCancellationTokenSource;
+        public PixelPipeline ActivePipeline;
+
+        private CancellationTokenSource PipelineCancellationTokenSource;
 
         public override void _Ready()
         {
             GlobalSignals = GetNode<GlobalSignals>("/root/GlobalSignals");
-            FilePipelines = new ();
+            FilePipelines = new();
             AttachToSignals();
         }
 
         private void AttachToSignals()
         {
             GlobalSignals.OpenFileNotification += (filePath) => LoadFile(filePath);
+            GlobalSignals.ImagePipelineUpdatedProperty += (moduleName, properties) => SetPipelineProperty(moduleName, properties);
         }
 
         public async void LoadFile(string filePath)
         {
-            PixelPipeline activePipeline = FilePipelines.GetValueOrDefault(filePath) ?? new PixelPipeline(filePath);
-            FilePipelines.TryAdd(filePath, activePipeline);
-            Image image = await activePipeline.RunPipeline();
+            ActivePipeline = FilePipelines.GetValueOrDefault(filePath) ?? new PixelPipeline(filePath);
+            FilePipelines.TryAdd(filePath, ActivePipeline);
+            await RunActivePipeline();
+        }
 
-            GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
+        public async void SetPipelineProperty(string moduleName, ModuleProperties properties)
+        {
+            GD.Print(moduleName);
+            GD.Print(properties);
+            ActivePipeline.UpdateModuleProperties(moduleName, properties);
+            await RunActivePipeline();
+        }
+
+        public async Task RunActivePipeline()
+        {
+            PipelineCancellationTokenSource?.Cancel();
+
+            PipelineCancellationTokenSource = new CancellationTokenSource();
+            Image image = await ActivePipeline.RunPipeline(PipelineCancellationTokenSource.Token);
+            if(image != null){
+                GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
+                PipelineCancellationTokenSource.Cancel();
+            }
         }
     }
 }

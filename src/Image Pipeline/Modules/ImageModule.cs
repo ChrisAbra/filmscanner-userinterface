@@ -4,14 +4,16 @@ using System.Threading.Tasks;
 
 namespace Scanner.ImagePipeline
 {
-    public enum ModuleStatus {
+    public abstract partial class ModuleProperties : GodotObject { }
+    public enum ModuleStatus
+    {
         DIRTY,
 
         DISABLED,
         WORKING,
         COMPLETE
     }
-    public abstract class ImageModule
+    public abstract partial class ImageModule
     {
         public ModuleStatus Status;
 
@@ -27,6 +29,8 @@ namespace Scanner.ImagePipeline
 
         protected abstract Image Process(Image image);
 
+        public ModuleProperties ModuleProperties;
+
         public Image Run(ref Image input, bool cacheImage)
         {
             this.Status = ModuleStatus.WORKING;
@@ -34,11 +38,13 @@ namespace Scanner.ImagePipeline
             Image output = Process(input);
             LastRunTime = DateTime.Now - startTime;
             this.Status = ModuleStatus.COMPLETE;
-            if(cacheImage){
+            if (cacheImage)
+            {
                 CachedImage = new Image();
                 CachedImage.CopyFrom(output);
             }
-            else{
+            else
+            {
                 CachedImage = null;
             }
             return output;

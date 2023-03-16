@@ -3,17 +3,33 @@ using System;
 
 namespace Scanner.ImagePipeline
 {
-    public class Exposure : ImageModule
+    public partial class Exposure : ImageModule
     {
-        public Exposure(string label){
+        public partial class ExposureProperties : ModuleProperties {
+            public float EV;
+
+            public ExposureProperties()
+            {
+                EV = 1.0f;
+            }
+        }
+
+        public Exposure(string label, ExposureProperties properties){
             this.Name = "Exposure";
             this.Label = label ?? this.Name;
             this.Description = "Controlls the Exposure of an image";
+            this.ModuleProperties = properties;
         }
 
         protected override Image Process(Image image)
         {
-            return image;
+            if(ModuleProperties is ExposureProperties properties){
+                image.AdjustBcs(properties.EV,1f,1f);
+                return image;
+            }
+            else{
+                throw new Exception("Properties provided are not of compatible type");
+            }
         }
     }
 }
