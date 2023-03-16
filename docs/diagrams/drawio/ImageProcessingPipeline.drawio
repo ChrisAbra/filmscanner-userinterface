@@ -1,0 +1,132 @@
+<mxfile host="65bd71144e">
+    <diagram id="LV0c6pKh-yrLzbDCUL1L" name="Page-1">
+        <mxGraphModel dx="1170" dy="872" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6" style="edgeStyle=none;html=1;" edge="1" parent="1" source="2" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Read data and metadata" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="334" y="170" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" style="edgeStyle=none;html=1;" edge="1" parent="1" source="3" target="2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="File" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.25;" parent="1" vertex="1">
+                    <mxGeometry x="344" y="40" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;" edge="1" parent="1" source="5" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Convert to Godot Image class" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="334" y="300" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=none;html=1;" edge="1" parent="1" source="10" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Build List of Image Operation Modules" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="334" y="436" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Image Operations" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="110" y="436" width="140" height="112" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="e.g Convert Colour Space" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="13">
+                    <mxGeometry y="26" width="140" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="e.g Change Exposure" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="13">
+                    <mxGeometry y="60" width="140" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="e.g Tone map" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="13">
+                    <mxGeometry y="86" width="140" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="18" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="18" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Run Operations in order" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+                    <mxGeometry x="334" y="570" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Load File from &lt;br&gt;File Path" style="endArrow=classic;html=1;curved=1;dashed=1;dashPattern=8 8;entryX=0.375;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="2">
+                    <mxGeometry x="-0.4234" y="5" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="100" y="70" as="sourcePoint"/>
+                        <mxPoint x="394" y="170" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="310" y="70"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="26" target="33">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="26" target="35">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;" edge="1" parent="1" source="26" target="38">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="Convert Image from float32 to int8 for display" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="334" y="700" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;curved=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="10">
+                    <mxGeometry width="100" height="100" relative="1" as="geometry">
+                        <mxPoint x="250" y="466" as="sourcePoint"/>
+                        <mxPoint x="480" y="760" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;curved=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;shadow=0;fillColor=none;" edge="1" parent="1" target="18">
+                    <mxGeometry width="100" height="100" relative="1" as="geometry">
+                        <mxPoint x="210" y="550" as="sourcePoint"/>
+                        <mxPoint x="344" y="476" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="240" y="590"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="Set ImageTexture for rendering" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="334" y="840" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="Save Image to file" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="840" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Cache output" style="whiteSpace=wrap;html=1;rounded=0;glass=0;shadow=0;" vertex="1" parent="1">
+                    <mxGeometry x="534" y="700" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;" edge="1" parent="1" source="41" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="Cache output &lt;br&gt;if Active" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="534" y="300" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="First Modify of &lt;br&gt;Image Operations &lt;br&gt;properties" style="endArrow=classic;html=1;curved=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="41">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="750" y="190" as="sourcePoint"/>
+                        <mxPoint x="680" y="190" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="660" y="210"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="49" style="edgeStyle=orthogonalEdgeStyle;curved=1;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="45" target="18">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="Cache output in module before" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="534" y="570" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="Subsequent modify of Image &lt;br&gt;Operator Properties" style="endArrow=classic;html=1;curved=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="45">
+                    <mxGeometry x="0.0037" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="750" y="440" as="sourcePoint"/>
+                        <mxPoint x="604" y="310" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="670" y="460"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

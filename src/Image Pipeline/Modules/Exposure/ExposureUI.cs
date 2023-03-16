@@ -16,6 +16,7 @@ namespace Scanner.UI
             Properties = new Exposure.ExposureProperties(){
                 EV = 1f
             };
+            Properties.GetPropertyList();
             EVSlider.Value = Properties.EV;
         }
 

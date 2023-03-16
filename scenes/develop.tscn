@@ -67,6 +67,7 @@ layout_mode = 2
 
 [node name="Exposure" parent="VBoxContainer/HSplitContainer/HSplitContainer/RightPanelTabs/Inspector" instance=ExtResource("3_ufa4q")]
 layout_mode = 1
+anchors_preset = 15
 
 [node name="CenterPanel" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer"]
 layout_mode = 2

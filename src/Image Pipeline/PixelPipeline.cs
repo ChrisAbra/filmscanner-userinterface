@@ -73,7 +73,7 @@ namespace Scanner.ImagePipeline
 
         private List<ImageModule> ImageProcessingModules;
 
-        public List<TreeItem> TreeItems;
+        public Tree Tree;
 
         public PixelPipeline(string filePath, PixelPipelineState state = PixelPipelineState.ACTIVE)
         {
@@ -109,12 +109,22 @@ namespace Scanner.ImagePipeline
 
         public void SetupDefaultPipelineModules()
         {
-            ImageProcessingModules = new()
+            ImageProcessingModules = new();
+            Tree = new();
+            Tree.CreateItem();
+
+            AddModuleToPipeline(new Exposure("Exposure", new Exposure.ExposureProperties
             {
-                new Exposure("Exposure",new Exposure.ExposureProperties{
-                    EV = 1f
-                })
-            };
+                EV = 1f
+            })
+            );
+        }
+
+        public void AddModuleToPipeline(ImageModule module)
+        {
+            var newTreeItem = Tree.CreateItem(Tree.GetRoot());
+            newTreeItem.SetText(0,module.Label);
+            ImageProcessingModules.Add(module);
         }
 
         public async Task<Image> RunPipeline(CancellationToken cancellationToken)
@@ -214,7 +224,7 @@ namespace Scanner.ImagePipeline
                 magickImage.Alpha(AlphaOption.Remove);
             }
             float[] floatArray = magickImagePixels.ToArray();
-            byte[] byteArray = new byte[floatArray.Length * 4];
+            byte[] byteArray = new byte[floatArray.Length * sizeof(float)];
             Buffer.BlockCopy(floatArray, 0, byteArray, 0, byteArray.Length);
 
             UnprocessedImage = Image.CreateFromData(magickImage.Width, magickImage.Height, false, Image.Format.Rgbf, byteArray);

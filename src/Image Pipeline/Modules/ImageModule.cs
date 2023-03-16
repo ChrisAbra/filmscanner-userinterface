@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Scanner.ImagePipeline
@@ -8,7 +9,6 @@ namespace Scanner.ImagePipeline
     public enum ModuleStatus
     {
         DIRTY,
-
         DISABLED,
         WORKING,
         COMPLETE
@@ -48,6 +48,17 @@ namespace Scanner.ImagePipeline
                 CachedImage = null;
             }
             return output;
+        }
+
+        public Control CreateUIControls(){
+            Control container = new (){
+                Name = Label
+            };
+            foreach(var property in ModuleProperties.GetType().GetProperties()){
+                var attribute = property.GetCustomAttribute<ImageModulePropertyAttribute>();
+                container.AddChild(attribute.CreateNode());
+            }
+            return container;
         }
     }
 }

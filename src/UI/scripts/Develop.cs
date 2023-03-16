@@ -9,6 +9,7 @@ namespace Scanner.UI
     public partial class Develop : Control
     {
         GlobalSignals GlobalSignals;
+        Tree treeNode;
 
         private Dictionary<string, PixelPipeline> FilePipelines;
 
@@ -19,6 +20,7 @@ namespace Scanner.UI
         public override void _Ready()
         {
             GlobalSignals = GetNode<GlobalSignals>("/root/GlobalSignals");
+            treeNode = GetNode<Tree>("%PixelPipeline");
             FilePipelines = new();
             AttachToSignals();
         }
@@ -50,6 +52,7 @@ namespace Scanner.UI
 
             PipelineCancellationTokenSource = new CancellationTokenSource();
             Image image = await ActivePipeline.RunPipeline(PipelineCancellationTokenSource.Token);
+            treeNode.ReplaceBy(ActivePipeline.Tree);
             if(image != null){
                 GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
                 PipelineCancellationTokenSource.Cancel();
