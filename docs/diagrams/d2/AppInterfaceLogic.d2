@@ -1,0 +1,40 @@
+UI: {
+  shape: sequence_diagram
+
+  Signals
+  Container
+  Library
+  Develop
+  Tree
+  Viewport
+  Inspector
+  ImagePipeline
+
+  LoadFile: Load File {
+    Library -> Signals: LoadFile(path)
+    Container <- Signals: Switch to Develop tab
+    Develop <- Signals: LoadFile and start pipeline
+  }
+
+  StartPipeline : Start Pipeline {
+    Develop -> ImagePipeline: Get Image w/path
+    ImagePipeline -> Develop: Return Image;
+
+    Develop -> Viewport : Render Image
+    Develop <- ImagePipeline : Get Used Modules
+    Develop -> Tree : Display list of modules
+  }
+
+  SelectModule : Select a Module {
+    Tree -> Signals : ModuleSelected(Module)
+    Signals -> Inspector : Render Property Drawer;
+  }
+
+  PropertyChanged : Property Changed {
+    Inspector -> Signals : PropertyUpdated(Module,Property)
+    Signals -> Develop
+    Develop -> ImagePipeline : Re-render
+    ImagePipeline -> Develop: Get output
+    Develop -> Viewport: Render 
+  }
+}

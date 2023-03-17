@@ -1,0 +1,44 @@
+ImagePipeline: {
+  shape: sequence_diagram
+  Modules
+  Run
+  LoadFile
+  Setup
+  AddModule
+  ConvertToGodotImage: To Godot Image
+  CachedUnprocessedImage: Cache (Unprocessed)
+  CachedProcessedImage: Cache (Processed)
+  ReturnImage: Return(Image)
+
+  NotNewOrModified: Not new or modified {
+    Run -> CachedProcessedImage: No Modified Modules
+    CachedProcessedImage -> ReturnImage: Return Image
+  }
+
+  NewOrModified: New or Modified {
+    Uninitalised?: : New {
+      Run -> Setup: Setup Pipeline
+      Setup -> Run
+      Setup -> AddModule: Add Exposure
+    }
+
+    FileNotLoaded: File not loaded {
+      Run -> LoadFile: Load File
+      LoadFile -> Run: File loaded
+      Run -> ConvertToGodotImage
+      ConvertToGodotImage -> CachedUnprocessedImage
+    }
+
+    Compute: Compute {
+      Run <- CachedUnprocessedImage: Get Unprocessed Image
+      Run -> Modules: Compute Modules
+      Modules -> Run: await results
+      Run <-> Modules: Repeat as needed
+    }
+
+    CacheAndReturn: Cache and Return {
+      Run -> CachedProcessedImage: Cache Processed Image
+      CachedProcessedImage -> ReturnImage: Return Image
+    }
+  }
+}
