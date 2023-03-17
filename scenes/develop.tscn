@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://clb6r7exuetds"]
+[gd_scene load_steps=4 format=3 uid="uid://clb6r7exuetds"]
 
 [ext_resource type="Theme" uid="uid://d4m0hfxqfhyme" path="res://themes/default_theme.tres" id="1_4evyb"]
 [ext_resource type="Script" path="res://src/UI/scripts/Develop.cs" id="2_ghcrc"]
 [ext_resource type="PackedScene" uid="uid://c2pkbyd0tynxf" path="res://ImageViewport.tscn" id="3_8hhm4"]
-[ext_resource type="PackedScene" uid="uid://dbbgk2f07uu12" path="res://src/Image Pipeline/Modules/Exposure/exposure.tscn" id="3_ufa4q"]
 
 [node name="Develop" type="Panel"]
 anchors_preset = 15
@@ -64,10 +63,6 @@ use_hidden_tabs_for_min_size = true
 [node name="Inspector" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer/RightPanelTabs"]
 custom_minimum_size = Vector2(300, 2.08165e-12)
 layout_mode = 2
-
-[node name="Exposure" parent="VBoxContainer/HSplitContainer/HSplitContainer/RightPanelTabs/Inspector" instance=ExtResource("3_ufa4q")]
-layout_mode = 1
-anchors_preset = 15
 
 [node name="CenterPanel" type="Panel" parent="VBoxContainer/HSplitContainer/HSplitContainer"]
 layout_mode = 2

@@ -16,10 +16,10 @@ ImagePipeline: {
   }
 
   NewOrModified: New or Modified {
-    Uninitalised?: : New {
+    Uninitalised?: New {
       Run -> Setup: Setup Pipeline
       Setup -> Run
-      Setup -> AddModule: Add Exposure
+      Setup -> AddModule: Add Default Modules
     }
 
     FileNotLoaded: File not loaded {

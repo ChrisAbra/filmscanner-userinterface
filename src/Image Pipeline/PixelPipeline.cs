@@ -73,8 +73,6 @@ namespace Scanner.ImagePipeline
 
         private List<ImageModule> ImageProcessingModules;
 
-        public Tree Tree;
-
         public PixelPipeline(string filePath, PixelPipelineState state = PixelPipelineState.ACTIVE)
         {
             this.filePath = filePath;
@@ -109,23 +107,15 @@ namespace Scanner.ImagePipeline
 
         public void SetupDefaultPipelineModules()
         {
-            ImageProcessingModules = new();
-            Tree = new();
-            Tree.CreateItem();
-
-            AddModuleToPipeline(new Exposure("Exposure", new Exposure.ExposureProperties
+            ImageProcessingModules = new()
             {
-                EV = 1f
-            })
-            );
+                new Exposure("Exposure", new Exposure.ExposureProperties
+                {
+                    EV = 1f
+                })
+            };
         }
 
-        public void AddModuleToPipeline(ImageModule module)
-        {
-            var newTreeItem = Tree.CreateItem(Tree.GetRoot());
-            newTreeItem.SetText(0,module.Label);
-            ImageProcessingModules.Add(module);
-        }
 
         public async Task<Image> RunPipeline(CancellationToken cancellationToken)
         {
@@ -188,12 +178,11 @@ namespace Scanner.ImagePipeline
 
                 return CompletedImage;
             }
-            catch (TaskCanceledException cancelledException)
+            catch (TaskCanceledException _)
             {
                 GD.Print("Pipeline processing cancelled");
                 return null;
             }
-
         }
 
         private void RGBFImageToRGB8(ref Image image)

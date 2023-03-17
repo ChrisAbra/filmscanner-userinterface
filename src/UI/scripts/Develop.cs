@@ -52,7 +52,6 @@ namespace Scanner.UI
 
             PipelineCancellationTokenSource = new CancellationTokenSource();
             Image image = await ActivePipeline.RunPipeline(PipelineCancellationTokenSource.Token);
-            treeNode.ReplaceBy(ActivePipeline.Tree);
             if(image != null){
                 GlobalSignals.EmitSignal(GlobalSignals.SignalName.ImagePipelineCompletedImage, image);
                 PipelineCancellationTokenSource.Cancel();
